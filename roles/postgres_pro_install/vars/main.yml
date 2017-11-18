@@ -1,0 +1,3 @@
+---
+# vars file for roles/postgres_pro_install
+pgpro_version: 9.6

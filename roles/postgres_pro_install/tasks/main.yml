@@ -1,15 +1,7 @@
-- name: Install postgrespro
-  hosts: web1
-  vars:
-    pgpro_version: 9.6
-    locale: ru_RU.UTF-8
-    database_name: test_database
-    database_user: test_user
-    db_pass: qwerty
-
-  become: True
-  tasks:
-
+---
+# tasks file for roles/postgres_pro_install
+- block:
+  
   - name: Add postgrespro repo key
     apt_key:
       url: "http://repo.postgrespro.ru/pgpro-{{pgpro_version}}/keys/GPG-KEY-POSTGRESPRO"
@@ -38,27 +30,4 @@
   - name: enable postgres at boot, restart it
     service: name="postgresql@{{pgpro_version}}-main" state=restarted enabled=yes
 
-
-  - name: create project locale
-    locale_gen: name={{ locale }} state=present
-    register: result
-
-  - name: restart postgres after creating locale
-    service: name="postgresql@{{pgpro_version}}-main" state=restarted
-    when: result.changed
-
-  - name: create a user
-    postgresql_user:
-      name: "{{ database_user }}"
-      password: "{{ db_pass }}"
-    become_user: postgres
-
-  - name: create the database
-    postgresql_db:
-      name: "{{ database_name }}"
-      owner: "{{ database_user }}"
-      encoding: UTF8
-      lc_ctype: "{{ locale }}"
-      lc_collate: "{{ locale }}"
-      template: template0
-    become_user: postgres
+  become: True
