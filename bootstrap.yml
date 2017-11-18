@@ -1,0 +1,9 @@
+- name: Deploy pjango+postgres+gevent+ngix project
+  hosts: web1
+
+  roles:
+    - role: postgres_pro_install
+    - role: postgres_pro_createdb
+      database_name: kill_me
+      database_user: suicide_guy
+      db_pass: rip
