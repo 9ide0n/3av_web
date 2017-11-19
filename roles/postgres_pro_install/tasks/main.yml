@@ -2,12 +2,12 @@
 # tasks file for roles/postgres_pro_install
 - block:
 
-  - name: Add postgrespro repo key
+  - name: add postgrespro repo key
     apt_key:
       url: "http://repo.postgrespro.ru/pgpro-{{postgrespro_version}}/keys/GPG-KEY-POSTGRESPRO"
       state: present
 
-  - name: Add postgrespro repo
+  - name: add postgrespro repo
     apt_repository:
       repo: "deb http://repo.postgrespro.ru/pgpro-{{postgrespro_version}}/ubuntu {{ansible_distribution_release}} main"
       filename: postgrespro
@@ -21,19 +21,20 @@
       - postgrespro
       - python-psycopg2
 
-  - name: copy pg_hba.conf
+  - name: copy available configs
     template: >
-      src={{postgrespro_pghba}} dest="/etc/postgresql/{{postgrespro_version}}/main/pg_hba.conf"
+      src="{{item.path}}" dest="/etc/postgresql/{{postgrespro_version}}/main/{{item.file}}"
       owner=postgres group=postgres mode=0640
-    when: postgrespro_pghba is defined
+    with_items:
+      - "{{postgrespro_configs}}"
+    when: postgrespro_configs is defined
+    register: result
 
-  - name: copy postgresql.conf
-    template: >
-      src={{postgrespro_postgresql}} dest="/etc/postgresql/{{postgrespro_version}}/main/postgresql.conf"
-      owner=postgres group=postgres mode=0640
-    when: postgrespro_postgresql is defined
+  - name: restart postgres after changes in configs
+    service: name="postgresql@{{postgrespro_version}}-main" state=restarted
+    when: result.changed
 
-  - name: enable postgres at boot, restart it
-    service: name="postgresql@{{postgrespro_version}}-main" state=restarted enabled=yes
+  - name: enable postgres at boot
+    service: name="postgresql@{{postgrespro_version}}-main" state=started enabled=yes
 
   become: True
