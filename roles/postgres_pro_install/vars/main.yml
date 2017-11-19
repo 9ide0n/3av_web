@@ -1,3 +1,0 @@
----
-# vars file for roles/postgres_pro_install
-postgrespro_version: 9.6

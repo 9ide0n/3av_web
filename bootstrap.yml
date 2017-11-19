@@ -1,13 +1,13 @@
-- name: Deploy pjango+postgres+gevent+ngix project
+- name: Deploy pjango+postgres+gevent+nginx project
   hosts: web1
 
   roles:
-    - role: postgres_pro_install
+    - role: 91de0n.postgrespro
       postgrespro_configs:
         - {file: pg_hba.conf, path: templates/postgrespro/pg_hba.conf.j2}
         - {file: postgresql.conf, path: templates/postgrespro/postgresql.conf.j2}
 
-    - role: postgres_pro_createdb
-      database_name: kill_me
-      database_user: suicide_guy
-      db_pass: rip
+    - role: 91de0n.postgrespro_initdb
+      postgrespro_initdb_dbname: kill_me
+      postgrespro_initdb_dbuser: suicide
+      postgrespro_initdb_dbpass: rip

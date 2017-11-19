@@ -1,9 +1,9 @@
 ---
-# tasks file for roles/postgres_pro_createdb
+# tasks file for roles/91de0n.postgrespro_initdb
 - block:
-  
+
   - name: create project locale
-    locale_gen: name={{ locale }} state=present
+    locale_gen: name={{ postgrespro_initdb_locale }} state=present
     register: result
 
   - name: restart postgres after creating locale
@@ -12,17 +12,17 @@
 
   - name: create a user
     postgresql_user:
-      name: "{{ database_user }}"
-      password: "{{ db_pass }}"
+      name: "{{ postgrespro_initdb_dbuser }}"
+      password: "{{ postgrespro_initdb_dbpass }}"
     become_user: postgres
 
   - name: create the database
     postgresql_db:
-      name: "{{ database_name }}"
-      owner: "{{ database_user }}"
+      name: "{{ postgrespro_initdb_dbname }}"
+      owner: "{{ postgrespro_initdb_dbuser }}"
       encoding: UTF8
-      lc_ctype: "{{ locale }}"
-      lc_collate: "{{ locale }}"
+      lc_ctype: "{{ postgrespro_initdb_locale }}"
+      lc_collate: "{{ postgrespro_initdb_locale }}"
       template: template0
     become_user: postgres
 

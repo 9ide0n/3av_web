@@ -1,5 +1,5 @@
 ---
-# tasks file for roles/postgres_pro_install
+# tasks file for roles/91de0n.postgrespro
 - block:
 
   - name: add postgrespro repo key

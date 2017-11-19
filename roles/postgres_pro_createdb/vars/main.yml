@@ -1,7 +1,0 @@
----
-# vars file for roles/postgres_pro_createdb
-
-locale: ru_RU.UTF-8
-database_name: test_database
-database_user: test_user
-db_pass: qwerty

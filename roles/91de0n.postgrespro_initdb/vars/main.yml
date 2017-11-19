@@ -1,0 +1,7 @@
+---
+# vars file for roles/91de0n.postgrespro_initdb
+
+postgrespro_initdb_locale: ru_RU.UTF-8
+postgrespro_initdb_dbname: test_database
+postgrespro_initdb_dbuser: test_user
+postgrespro_initdb_dbpass: qwerty
