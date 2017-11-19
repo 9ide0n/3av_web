@@ -3,6 +3,8 @@
 
   roles:
     - role: postgres_pro_install
+      postgrespro_pghba: templates/postgrespro/pg_hba.conf.j2
+
     - role: postgres_pro_createdb
       database_name: kill_me
       database_user: suicide_guy
