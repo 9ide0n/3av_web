@@ -2,12 +2,13 @@
   hosts: web1
 
   roles:
-    - role: 91de0n.postgrespro
-      postgrespro_configs:
-        - {file: pg_hba.conf, path: templates/postgrespro/pg_hba.conf.j2}
-        - {file: postgresql.conf, path: templates/postgrespro/postgresql.conf.j2}
-
-    - role: 91de0n.postgrespro_initdb
-      postgrespro_initdb_dbname: kill_me
-      postgrespro_initdb_dbuser: suicide
-      postgrespro_initdb_dbpass: rip
+    # - role: 91de0n.postgrespro
+    #   postgrespro_configs:
+    #     - {file: pg_hba.conf, path: templates/postgrespro/pg_hba.conf.j2}
+    #     - {file: postgresql.conf, path: templates/postgrespro/postgresql.conf.j2}
+    #
+    # - role: 91de0n.postgrespro_initdb
+    #   postgrespro_initdb_dbname: kill_me
+    #   postgrespro_initdb_dbuser: suicide
+    #   postgrespro_initdb_dbpass: rip
+    - role: roles/91de0n.djangopg

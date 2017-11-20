@@ -1,0 +1,6 @@
+---
+mezzanine_proj_app: djangopg
+mezzanine_proj_name: "{{ mezzanine_proj_app }}"
+mezzanine_home: "/projects/web1/"
+mezzanine_repo_url: https://github.com/9ide0n/djangopg.git
+mezzanine_repo_path: "{{ mezzanine_home }}/{{ mezzanine_proj_name }}"

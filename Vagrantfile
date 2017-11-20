@@ -6,7 +6,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "ubuntu/xenial64"
   config.vm.synced_folder ".", "/vagrant", disabled: true
-
+  config.ssh.forward_agent = true
+  
   config.vm.provision "shell", path: "install_python.sh"
 
   config.vm.define "web1" do |machine|
