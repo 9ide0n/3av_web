@@ -5,3 +5,4 @@ postgrespro_initdb_locale: ru_RU.UTF-8
 postgrespro_initdb_dbname: test_database
 postgrespro_initdb_dbuser: test_user
 postgrespro_initdb_dbpass: qwerty
+postgrespro_initdb_dbport: 5432
