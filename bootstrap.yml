@@ -1,6 +1,5 @@
-- name: Deploy pjango+postgres+gevent+nginx project
-  hosts: web1
-
+- name: Deploy db component for project
+  hosts: db
   roles:
     - role: 91de0n.postgrespro
       postgrespro_configs:
@@ -11,9 +10,11 @@
       postgrespro_initdb_dbname: "{{dbname}}"
       postgrespro_initdb_dbuser: "{{dbuser}}"
       postgrespro_initdb_dbpass: "{{dbpass}}"
+      postgrespro_initdb_locale: "{{locale}}"
 
+- name: deploy web component of project
+  hosts: web
+  roles:
     - role: roles/91de0n.djangopg
       djangopg_dbhost: "{{dbhost}}"
-      djangopg_domains:
-        - "{{dbhost}}"
-        - "www.{{dbhost}}"
+      djangopg_domains: "{{dbdomains}}"

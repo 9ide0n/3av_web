@@ -1,6 +1,0 @@
----
-dbhost: 192.168.34.10.xip.io
-dbname: kill_me
-dbuser: suicide
-dbpass: rip
-dbport: 5432

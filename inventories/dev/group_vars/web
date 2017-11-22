@@ -1,0 +1,5 @@
+---
+dbhost: 192.168.34.10.xip.io
+dbdomains:
+- "{{dbhost}}"
+- "www.{{dbhost}}"
