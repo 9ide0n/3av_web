@@ -1,7 +1,7 @@
 ---
 mezzanine_proj_app: djangopg
 mezzanine_proj_name: "{{ mezzanine_proj_app }}"
-mezzanine_home: "/projects/web1/"
+mezzanine_home: "/projects/web1"
 mezzanine_repo_url: https://github.com/9ide0n/djangopg.git
 mezzanine_repo_path: "{{ mezzanine_home }}/{{ mezzanine_proj_name }}"
 
@@ -11,8 +11,8 @@ mezzanine_venv_home: "{{ mezzanine_home }}/.virtualenvs"
 mezzanine_venv_path: "{{ mezzanine_venv_home }}/{{ mezzanine_proj_name }}"
 mezzanine_settings_path: "{{ mezzanine_proj_path }}/{{ mezzanine_proj_name }}"
 # mezzanine_reqs_path: requirements.txt
-# mezzanine_conf_path: /etc/nginx/conf
+mezzanine_conf_path: /etc/nginx/conf
 mezzanine_python: "{{ mezzanine_venv_path }}/bin/python"
 mezzanine_manage: "{{ mezzanine_python }} {{ mezzanine_proj_path }}/manage.py"
-# mezzanine_num_workers: "multiprocessing.cpu_count() * 2 + 1"
-# mezzanine_gunicorn_procname: gunicorn_mezzanine
+mezzanine_num_workers: "multiprocessing.cpu_count() * 2 + 1"
+mezzanine_gunicorn_procname: gunicorn_mezzanine

@@ -17,6 +17,8 @@ DATABASES = {
     }
 }
 
+{% if pipeline != 'dev' %}
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
 
 CACHE_MIDDLEWARE_SECONDS = 60
@@ -30,7 +32,9 @@ CACHES = {
     }
 }
 
+
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+{% endif %}
 
 INSTALLED_APPS += [
     'polls.apps.PollsConfig',
