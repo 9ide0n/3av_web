@@ -1,5 +1,7 @@
 - name: Deploy db component for project
   hosts: db
+  pre_tasks:
+  - include_tasks: tasks/load_vars.yml
   roles:
     - role: 91de0n.postgrespro
       postgrespro_configs:
@@ -14,6 +16,8 @@
 
 - name: deploy web component of project
   hosts: web
+  pre_tasks:
+  - include_tasks: tasks/load_vars.yml  
   roles:
     - role: roles/91de0n.djangopg
       djangopg_dbhost: "{{dbhost}}"

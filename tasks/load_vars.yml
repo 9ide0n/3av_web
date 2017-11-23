@@ -1,0 +1,3 @@
+# - include_vars: "inventories/shared-secrets.yml"
+- include_vars: "inventories/shared_vars.yml"
+- include_vars: "inventories/{{ pipeline }}/secrets.yml"

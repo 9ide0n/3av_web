@@ -3,7 +3,6 @@ pipeline: dev
 # dp variables listed here because they needed in local-settings.py.j2 in web groub as in db group
 dbname: kill_me
 dbuser: suicide
-dbpass: rip
+# dbpass: rip
 dbport: 5432
-locale: ru_RU.UTF-8
 tls_enabled: False
