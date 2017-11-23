@@ -1,5 +1,5 @@
 ---
-dbhost: 192.168.34.10.xip.io
+dbhost: "{{hostvars['web1'].ansible_host}}.xip.io"
 dbdomains:
 - "{{dbhost}}"
 - "www.{{dbhost}}"
