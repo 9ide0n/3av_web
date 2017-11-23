@@ -1,3 +1,5 @@
 ---
 # vars file for roles/91de0n.postgrespro
 postgrespro_version: 9.6
+postgrespro_template_pghbaconf: pg_hba.conf.j2
+postgrespro_template_postgresqlconf: postgresql.conf.j2

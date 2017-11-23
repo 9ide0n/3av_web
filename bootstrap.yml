@@ -2,23 +2,28 @@
   hosts: db
   pre_tasks:
   - include_tasks: tasks/load_vars.yml
-  roles:
-    - role: 91de0n.postgrespro
-      postgrespro_configs:
-        - {file: pg_hba.conf, path: templates/postgrespro/pg_hba.conf.j2}
-        - {file: postgresql.conf, path: templates/postgrespro/postgresql.conf.j2}
-    #
-    - role: 91de0n.postgrespro_initdb
-      postgrespro_initdb_dbname: "{{dbname}}"
-      postgrespro_initdb_dbuser: "{{dbuser}}"
-      postgrespro_initdb_dbpass: "{{dbpass}}"
-      postgrespro_initdb_locale: "{{locale}}"
+  tasks:
+    - include_role:
+        name: 91de0n.postgrespro
+      vars:
+        postgrespro_template_pghbaconf: "templates/{{pipeline}}/postgrespro/pg_hba.conf.j2"
+        postgrespro_template_postgresqlconf: "templates/{{pipeline}}/postgrespro/postgresql.conf.j2"
+
+    - include_role:
+        name: 91de0n.postgrespro_initdb
+      vars:
+        postgrespro_initdb_dbname: "{{dbname}}"
+        postgrespro_initdb_dbuser: "{{dbuser}}"
+        postgrespro_initdb_dbpass: "{{dbpass}}"
+        postgrespro_initdb_locale: "{{locale}}"
 
 - name: deploy web component of project
   hosts: web
   pre_tasks:
-  - include_tasks: tasks/load_vars.yml  
-  roles:
-    - role: roles/91de0n.djangopg
-      djangopg_dbhost: "{{dbhost}}"
-      djangopg_domains: "{{dbdomains}}"
+  - include_tasks: tasks/load_vars.yml
+  tasks:
+    - include_role:
+        name: 91de0n.djangopg
+      vars:
+        djangopg_dbhost: "{{dbhost}}"
+        djangopg_domains: "{{dbdomains}}"

@@ -21,18 +21,25 @@
       - postgrespro
       - python-psycopg2
 
-  - name: copy available configs
+  - name: copy pg_hba.conf if template exists
     template: >
-      src="{{item.path}}" dest="/etc/postgresql/{{postgrespro_version}}/main/{{item.file}}"
+      src="{{item}}" dest="/etc/postgresql/{{postgrespro_version}}/main/pg_hba.conf"
       owner=postgres group=postgres mode=0640
-    with_items:
-      - "{{postgrespro_configs}}"
-    when: postgrespro_configs is defined
-    register: result
+    with_first_found:
+      - files:
+          - "{{postgrespro_template_pghbaconf}}"
+        skip: true
+    notify: restart postgres
 
-  - name: restart postgres after changes in configs
-    service: name="postgresql@{{postgrespro_version}}-main" state=restarted
-    when: result.changed
+  - name: copy postgresql.conf if template exists
+    template: >
+      src="{{item}}" dest="/etc/postgresql/{{postgrespro_version}}/main/postgresql.conf"
+      owner=postgres group=postgres mode=0640
+    with_first_found:
+      - files:
+          - "{{postgrespro_template_postgresqlconf}}"
+        skip: true
+    notify: restart postgres
 
   - name: enable postgres at boot
     service: name="postgresql@{{postgrespro_version}}-main" state=started enabled=yes
