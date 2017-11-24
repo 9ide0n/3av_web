@@ -2,49 +2,36 @@
   hosts: db
   pre_tasks:
   - include_tasks: tasks/load_vars.yml
-  tasks:
-    - include_role:
-        name: 91de0n.postgrespro
-      vars:
-        postgrespro_template_pghbaconf: "templates/{{pipeline}}/postgrespro/pg_hba.conf.j2"
-        postgrespro_template_postgresqlconf: "templates/{{pipeline}}/postgrespro/postgresql.conf.j2"
+  roles:
+    - role: 91de0n.postgrespro
+      postgrespro_template_pghbaconf: "templates/{{pipeline}}/postgrespro/pg_hba.conf.j2"
+      postgrespro_template_postgresqlconf: "templates/{{pipeline}}/postgrespro/postgresql.conf.j2"
 
-    - include_role:
-        name: 91de0n.postgrespro_initdb
-      vars:
-        postgrespro_initdb_dbname: "{{dbname}}"
-        postgrespro_initdb_dbuser: "{{dbuser}}"
-        postgrespro_initdb_dbpass: "{{dbpass}}"
-        postgrespro_initdb_locale: "{{locale}}"
+    - role: 91de0n.postgrespro_initdb
+      postgrespro_initdb_dbname: "{{dbname}}"
+      postgrespro_initdb_dbuser: "{{dbuser}}"
+      postgrespro_initdb_dbpass: "{{dbpass}}"
+      postgrespro_initdb_locale: "{{locale}}"
 
 - name: deploy web component of project
   hosts: web
   pre_tasks:
   - include_tasks: tasks/load_vars.yml
-  tasks:
-    - include_role:
-        name: 91de0n.djangopg
-      vars:
-        djangopg_template_localsettingspy: "templates/all/djangopg/local_settings.py.j2"
+  roles:
+    - role: 91de0n.djangopg
+      djangopg_template_localsettingspy: "templates/all/djangopg/local_settings.py.j2"
 
-    - include_role:
-        name: 91de0n.memcached
+    - role: 91de0n.memcached
       when: project_memcached
 
-    - include_role:
-        name: 91de0n.gunicorn
-      vars:
-        gunicorn_template_gunicornconfpy: "templates/all/gunicorn/gunicorn.conf.py.j2"
+    - role: 91de0n.gunicorn
+      gunicorn_template_gunicornconfpy: "templates/all/gunicorn/gunicorn.conf.py.j2"
       when: project_gunicorn
 
-    - include_role:
-        name: 91de0n.supervisor
-      vars:
-        supervisor_template_supervisorconf: "templates/all/supervisor/supervisor.conf.j2"
+    - role: 91de0n.supervisor
+      supervisor_template_supervisorconf: "templates/all/supervisor/supervisor.conf.j2"
       when: project_gunicorn
 
-    - include_role:
-        name: 91de0n.nginx
-      vars:
-        nginx_template_nginxconf: "templates/all/nginx/nginx.conf.j2"
+    - role: 91de0n.nginx
+      nginx_template_nginxconf: "templates/all/nginx/nginx.conf.j2"
       when: project_nginx
