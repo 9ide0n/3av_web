@@ -1,6 +1,6 @@
 ---
   - name: create a logs directory for supervisor and gunicorn
-    file: path="{{ mezzanine_home }}/logs" state=directory
+    file: path="{{ djangopg_home }}/logs" state=directory
 
   - name: install packages needed for deployment
     apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
@@ -11,21 +11,21 @@
 
 
   - name: install required python3 packages into project virtualenv
-    pip: name={{ item }} virtualenv={{ mezzanine_venv_path }}   virtualenv_python=python3
+    pip: name={{ item }} virtualenv={{ djangopg_venv_path }}   virtualenv_python=python3
     with_items:
       - gunicorn
       - python-memcached
 
   - name: set the gunicorn config file
-    template: src=gunicorn.conf.py.j2 dest={{ mezzanine_proj_path }}/gunicorn.conf.py
+    template: src=gunicorn.conf.py.j2 dest={{ djangopg_proj_path }}/gunicorn.conf.py
 
   - name: set the supervisor config file
-    template: src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/mezzanine.conf
+    template: src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/djangopg.conf
     become: True
 
 
   - name: restart supervisor
-    supervisorctl: name={{mezzanine_gunicorn_procname}} state=restarted
+    supervisorctl: name={{djangopg_gunicorn_procname}} state=restarted
     become: True
 
 
@@ -37,19 +37,19 @@
       - nginx
 
   - name: ensure config path exists
-    file: path={{ mezzanine_conf_path }} state=directory
+    file: path={{ djangopg_conf_path }} state=directory
     become: True
     when: tls_enabled
 
   - name: set the nginx config file
-    template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/mezzanine.conf
+    template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/djangopg.conf
     notify: restart nginx
     become: True
 
   - name: enable the nginx config file
     file:
-      src: /etc/nginx/sites-available/mezzanine.conf
-      dest: /etc/nginx/sites-enabled/mezzanine.conf
+      src: /etc/nginx/sites-available/djangopg.conf
+      dest: /etc/nginx/sites-enabled/djangopg.conf
       state: link
     notify: restart nginx
     become: True
@@ -61,10 +61,10 @@
 
   - name: create ssl certificates
     command: >
-      openssl req -new -x509 -nodes -out {{ mezzanine_proj_name }}.crt
-      -keyout {{ mezzanine_proj_name }}.key -subj '/CN={{ dbdomains[0] }}' -days 3650
-      chdir={{ mezzanine_conf_path }}
-      creates={{ mezzanine_conf_path }}/{{ mezzanine_proj_name }}.crt
+      openssl req -new -x509 -nodes -out {{ djangopg_proj_name }}.crt
+      -keyout {{ djangopg_proj_name }}.key -subj '/CN={{ dbdomains[0] }}' -days 3650
+      chdir={{ djangopg_conf_path }}
+      creates={{ djangopg_conf_path }}/{{ djangopg_proj_name }}.crt
     become: True
     when: tls_enabled
     notify: restart nginx
