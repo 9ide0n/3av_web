@@ -1,6 +1,17 @@
 ---
-dbhost: "{{hostvars['db1'].ansible_host}}.xip.io"
+project_host: "{{hostvars['db1'].ansible_host}}.xip.io"
 webhost: "{{hostvars['web1'].ansible_host}}.xip.io"
-dbdomains:
+project_domains:
 - "{{webhost}}"
 - "www.{{webhost}}"
+project_memcached: true
+
+# --- gunicorn+supervisor settings
+project_gunicorn: true
+project_gunicorn_num_workers: "multiprocessing.cpu_count() * 2 + 1"
+project_gunicorn_procname: "gunicorn_{{project_name}}"
+
+#--- nginx settings
+project_nginx: true
+project_ssl: true
+project_ssl_path: /etc/nginx/conf

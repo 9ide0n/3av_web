@@ -25,5 +25,26 @@
     - include_role:
         name: 91de0n.djangopg
       vars:
-        djangopg_dbhost: "{{dbhost}}"
-        djangopg_domains: "{{dbdomains}}"
+        djangopg_template_localsettingspy: "templates/all/djangopg/local_settings.py.j2"
+
+    - include_role:
+        name: 91de0n.memcached
+      when: project_memcached
+
+    - include_role:
+        name: 91de0n.gunicorn
+      vars:
+        gunicorn_template_gunicornconfpy: "templates/all/gunicorn/gunicorn.conf.py.j2"
+      when: project_gunicorn
+
+    - include_role:
+        name: 91de0n.supervisor
+      vars:
+        supervisor_template_supervisorconf: "templates/all/supervisor/supervisor.conf.j2"
+      when: project_gunicorn
+
+    - include_role:
+        name: 91de0n.nginx
+      vars:
+        nginx_template_nginxconf: "templates/all/nginx/nginx.conf.j2"
+      when: project_nginx

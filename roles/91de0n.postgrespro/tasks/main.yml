@@ -4,12 +4,12 @@
 
   - name: add postgrespro repo key
     apt_key:
-      url: "http://repo.postgrespro.ru/pgpro-{{postgrespro_version}}/keys/GPG-KEY-POSTGRESPRO"
+      url: "http://repo.postgrespro.ru/pgpro-{{project_postgres_version}}/keys/GPG-KEY-POSTGRESPRO"
       state: present
 
   - name: add postgrespro repo
     apt_repository:
-      repo: "deb http://repo.postgrespro.ru/pgpro-{{postgrespro_version}}/ubuntu {{ansible_distribution_release}} main"
+      repo: "deb http://repo.postgrespro.ru/pgpro-{{project_postgres_version}}/ubuntu {{ansible_distribution_release}} main"
       filename: postgrespro
       state: present
       update_cache: yes
@@ -23,7 +23,7 @@
 
   - name: copy pg_hba.conf if template exists
     template: >
-      src="{{item}}" dest="/etc/postgresql/{{postgrespro_version}}/main/pg_hba.conf"
+      src="{{item}}" dest="/etc/postgresql/{{project_postgres_version}}/main/pg_hba.conf"
       owner=postgres group=postgres mode=0640
     with_first_found:
       - files:
@@ -33,7 +33,7 @@
 
   - name: copy postgresql.conf if template exists
     template: >
-      src="{{item}}" dest="/etc/postgresql/{{postgrespro_version}}/main/postgresql.conf"
+      src="{{item}}" dest="/etc/postgresql/{{project_postgres_version}}/main/postgresql.conf"
       owner=postgres group=postgres mode=0640
     with_first_found:
       - files:
@@ -42,6 +42,6 @@
     notify: restart postgres
 
   - name: enable postgres at boot
-    service: name="postgresql@{{postgrespro_version}}-main" state=started enabled=yes
+    service: name="postgresql@{{project_postgres_version}}-main" state=started enabled=yes
 
   become: True

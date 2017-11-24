@@ -1,0 +1,43 @@
+---
+  - name: install nginx
+    apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+    become: True
+    with_items:
+      - nginx
+
+  - name: ensure config path exists
+    file: path={{ project_ssl_path }} state=directory
+    become: True
+    when: project_ssl
+
+  - name: set the nginx config file
+    template: src={{item}} dest="/etc/nginx/sites-available/{{project_name}}.conf"
+    with_first_found:
+      - files:
+          - "{{nginx_template_nginxconf}}"
+        skip: True
+    notify: restart nginx
+    become: True
+
+  - name: enable the nginx config file
+    file:
+      src: "/etc/nginx/sites-available/{{project_name}}.conf"
+      dest: "/etc/nginx/sites-enabled/{{project_name}}.conf"
+      state: link
+    notify: restart nginx
+    become: True
+
+  - name: remove the default nginx config file
+    file: path=/etc/nginx/sites-enabled/default state=absent
+    notify: restart nginx
+    become: True
+
+  - name: create ssl certificates
+    command: >
+      openssl req -new -x509 -nodes -out {{ project_name }}.crt
+      -keyout {{ project_name }}.key -subj '/CN={{ project_domains[0] }}' -days 3650
+      chdir={{ project_ssl_path }}
+      creates={{ project_ssl_path }}/{{ project_name }}.crt
+    become: True
+    when: project_ssl
+    notify: restart nginx

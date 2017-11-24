@@ -7,7 +7,7 @@
     register: result
 
   - name: restart postgres after creating locale
-    service: name="postgresql@{{postgrespro_version}}-main" state=restarted
+    service: name="postgresql@{{project_postgres_version}}-main" state=restarted
     when: result.changed
 
   - name: create a user

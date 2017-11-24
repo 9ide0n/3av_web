@@ -1,0 +1,12 @@
+---
+  - name: install gunicorn into project virtualenv
+    pip: name={{ item }} virtualenv={{ project_venv_path }}   virtualenv_python="python{{project_python_version}}"
+    with_items:
+      - gunicorn
+
+  - name: set the gunicorn config file
+    template: src={{item}} dest={{ project_path }}/gunicorn.conf.py
+    with_first_found:
+      - files:
+          - "{{gunicorn_template_gunicornconfpy}}"
+        skip: True

@@ -1,0 +1,2 @@
+---
+nginx_template_nginxconf: nginx.conf.j2

@@ -1,0 +1,15 @@
+---
+- name: install supervisor
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+  become: True
+  with_items:
+    - supervisor
+
+- name: set the supervisor config file
+  template: src={{item}} dest="/etc/supervisor/conf.d/{{project_name}}.conf"
+  with_first_found:
+    - files:
+        - "{{supervisor_template_supervisorconf}}"
+      skip: True
+  become: True
+  notify: restart supervisor

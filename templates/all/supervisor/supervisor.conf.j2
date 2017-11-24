@@ -1,0 +1,9 @@
+[program:{{ project_gunicorn_procname }}]
+command={{ project_venv_path }}/bin/gunicorn -c gunicorn.conf.py -p gunicorn.pid {{ project_app }}.wsgi:application
+directory={{ project_path }}
+user={{ project_user }}
+autostart=true
+stdout_logfile={{ project_logs }}/{{ project_name }}_supervisor.log
+autorestart=true
+redirect_stderr=true
+environment=LANG="{{ locale }}",LC_ALL="{{ locale }}",LC_LANG="{{ locale }}"

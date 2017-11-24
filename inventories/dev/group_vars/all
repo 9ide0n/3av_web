@@ -5,4 +5,3 @@ dbname: kill_me
 dbuser: suicide
 # dbpass: rip
 dbport: 5432
-tls_enabled: False

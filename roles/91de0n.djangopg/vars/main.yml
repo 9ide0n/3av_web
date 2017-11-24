@@ -1,18 +1,5 @@
 ---
-djangopg_proj_app: djangopg
-djangopg_proj_name: "{{ djangopg_proj_app }}"
-djangopg_home: "/projects/web1"
-djangopg_repo_url: https://github.com/9ide0n/djangopg.git
-djangopg_repo_path: "{{ djangopg_home }}/{{ djangopg_proj_name }}"
-
-djangopg_proj_path: "{{djangopg_repo_path}}/{{ djangopg_proj_name }}"
-djangopg_user: "{{ ansible_user }}"
-djangopg_venv_home: "{{ djangopg_home }}/.virtualenvs"
-djangopg_venv_path: "{{ djangopg_venv_home }}/{{ djangopg_proj_name }}"
-djangopg_settings_path: "{{ djangopg_proj_path }}/{{ djangopg_proj_name }}"
-# djangopg_reqs_path: requirements.txt
-djangopg_conf_path: /etc/nginx/conf
-djangopg_python: "{{ djangopg_venv_path }}/bin/python"
-djangopg_manage: "{{ djangopg_python }} {{ djangopg_proj_path }}/manage.py"
-djangopg_num_workers: "multiprocessing.cpu_count() * 2 + 1"
-djangopg_gunicorn_procname: gunicorn_djangopg
+djangopg_template_localsettingspy: local_settings.py.j2
+project_settings_path: "{{ project_path }}/{{ project_name }}"
+project_python: "{{ project_venv_path }}/bin/python"
+project_manage: "{{ project_python }} {{ project_path }}/manage.py"

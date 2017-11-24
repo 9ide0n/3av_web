@@ -1,0 +1,10 @@
+from __future__ import unicode_literals
+import multiprocessing
+
+# unix sockets can't be created at vboxfs, need to chain with nginx
+# bind = "unix:{{ project_path }}/gunicorn.sock"
+bind = "unix:/tmp/{{project_gunicorn_procname}}.sock"
+workers = {{ project_gunicorn_num_workers }}
+errorlog = "{{ project_logs }}/{{ project_name }}_error.log"
+loglevel = "error"
+proc_name = "{{ project_name }}"

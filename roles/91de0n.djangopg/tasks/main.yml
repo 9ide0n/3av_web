@@ -1,5 +1,45 @@
 ---
-  - include_tasks: application.yml
-  
-  - include_tasks: runtime.yml
-    when: pipeline != 'dev'
+
+- name: install packages needed for deployment
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+  become: True
+  with_items:
+    - git
+    - python3-pip
+    - python-pip
+
+- name: check out git repository of project, clone if needed
+  git: repo={{ project_repo_url }} dest={{ project_repo_path }} accept_hostkey=yes force=yes
+
+- name: install python3 virtualenvs
+  pip: name={{ item }} state=latest executable="pip{{project_python_version}}"
+  with_items:
+    - virtualenv
+    - virtualenvwrapper
+  become: True
+
+- name: install required python3 packages into project virtualenv
+  pip: name={{ item }} virtualenv={{ project_venv_path }}   virtualenv_python="python{{project_python_version}}"
+  with_items:
+    - psycopg2
+    - django
+
+- name: generate the settings file
+  template: src={{item}} dest={{ project_settings_path }}/local_settings.py
+  with_first_found:
+    - files:
+        - "{{djangopg_template_localsettingspy}}"
+      skip: True
+
+- name: apply migrations to create the database, collect static content
+  django_manage:
+    command: "{{ item }}"
+    app_path: "{{ project_path }}"
+    virtualenv: "{{ project_venv_path }}"
+  with_items:
+    - makemigrations
+    - migrate
+    - collectstatic
+
+- name: create a logs directory for supervisor and gunicorn
+  file: path="{{project_logs}}" state=directory

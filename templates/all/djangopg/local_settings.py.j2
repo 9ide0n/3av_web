@@ -1,4 +1,4 @@
-ALLOWED_HOSTS = [{% for djangopg_domain in djangopg_domains %}"{{ djangopg_domain }}",{% endfor %}]
+ALLOWED_HOSTS = [{% for project_domain in project_domains %}"{{ project_domain }}",{% endfor %}]
 
 DATABASES = {
     "default": {
@@ -11,19 +11,21 @@ DATABASES = {
         # Not used with sqlite3.
         "PASSWORD": "{{ dbpass }}",
         # Set to empty string for localhost. Not used with sqlite3.
-        "HOST": "{{ djangopg_dbhost | default("localhost") }}",
+        "HOST": "{{ project_host }}",
         # Set to empty string for default. Not used with sqlite3.
         "PORT": "{{ dbport }}",
     }
 }
 
-{% if pipeline != 'dev' %}
 
+{% if project_nginx %}
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
+{% endif %} {#project_nginx#}
 
+{% if project_memcached  %}
 CACHE_MIDDLEWARE_SECONDS = 60
 
-CACHE_MIDDLEWARE_KEY_PREFIX = "{{ djangopg_proj_name }}"
+CACHE_MIDDLEWARE_KEY_PREFIX = "{{ project_name }}"
 
 CACHES = {
     "default": {
@@ -34,7 +36,8 @@ CACHES = {
 
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-{% endif %}
+{% endif  %} {#project_memcached#}
+
 
 INSTALLED_APPS += [
     'polls.apps.PollsConfig',

@@ -12,7 +12,7 @@ Role Variables
 --------------
 
 
-postgrespro_version: 9.6 (default)
+project_postgres_version: 9.6 (default)
   Set version of postgres to install
 
 postgrespro_configs: (default none)
