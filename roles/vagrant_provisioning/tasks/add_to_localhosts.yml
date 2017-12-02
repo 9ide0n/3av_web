@@ -1,0 +1,8 @@
+- name: update localhosts with hostnames and ips
+  become: True
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^{{ item.ip }}  {{ item.name }} {{ item.name }}\.dev\.local'
+    line: "{{ item.ip }}  {{ item.name }} {{ item.name }}.dev.local"
+  with_items: "{{vagrant_nodes}}"
+  tags: provision

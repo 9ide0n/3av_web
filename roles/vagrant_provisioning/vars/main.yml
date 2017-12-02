@@ -1,0 +1,2 @@
+vagrant_template_vagrantfile: Vagrantfile.j2
+vagrant_template_ansible: provision.yml.j2

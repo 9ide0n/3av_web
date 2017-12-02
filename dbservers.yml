@@ -1,0 +1,22 @@
+- hosts:
+    - dbservers
+
+  vars_files:
+    - group_vars/all
+    - pipeline/{{ pipeline }}/secrets.yml
+    - pipeline/{{ pipeline }}/vars.yml
+    - pipeline/{{ pipeline }}/db_vars.yml
+    - group_vars/dbservers
+
+  roles:
+    - role: 91de0n.postgrespro
+      postgrespro_template_pghbaconf: "templates/all/postgrespro/pg_hba.conf.j2"
+      postgrespro_template_postgresqlconf: "templates/all/postgrespro/postgresql.conf.j2"
+      when: "provider != 'aws'"
+
+    - role: 91de0n.postgrespro_initdb
+      postgrespro_initdb_dbname: "{{dbname}}"
+      postgrespro_initdb_dbuser: "{{dbuser}}"
+      postgrespro_initdb_dbpass: "{{dbpass}}"
+      postgrespro_initdb_locale: "{{locale}}"
+      when: "provider != 'aws'"

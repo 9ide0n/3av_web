@@ -1,0 +1,12 @@
+- name: execute vagrant up against Vagrantfile
+  command: "vagrant reload"
+  args:
+    chdir: "{{project_deploy_directory}}"
+  listen: "reload and provision vagrant"
+
+
+# - name: execute vagrant provision to ensure inventory is refreshed
+#   command: "vagrant provision"
+#   args:
+#     chdir: "{{project_deploy_directory}}"
+#   listen: "reload and provision vagrant"

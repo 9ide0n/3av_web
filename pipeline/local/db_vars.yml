@@ -1,0 +1,5 @@
+dbname: stage_db
+dbuser: stage_user
+dbport: 5432
+
+# test: "{{vagrant_nodes}}"

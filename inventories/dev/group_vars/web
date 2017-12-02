@@ -1,8 +1,0 @@
----
-project_host: "{{hostvars['web1'].ansible_host}}.xip.io"
-project_domains:
-- "{{project_host}}"
-- "www.{{project_host}}"
-project_nginx: false
-project_gunicorn: false
-project_memcached: false

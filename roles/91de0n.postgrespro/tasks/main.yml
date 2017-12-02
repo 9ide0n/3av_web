@@ -42,6 +42,7 @@
     notify: restart postgres
 
   - name: enable postgres at boot
-    service: name="postgresql@{{project_postgres_version}}-main" state=started enabled=yes
+    service: name="postgresql" state=started enabled=yes
+    # service: name="postgresql@{{project_postgres_version}}-main" state=started enabled=yes
 
   become: True

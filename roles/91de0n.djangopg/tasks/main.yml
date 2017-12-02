@@ -38,6 +38,7 @@
     virtualenv: "{{ project_venv_path }}"
   with_items:
     - makemigrations
+    - "makemigrations polls"
     - migrate
     - collectstatic
 

@@ -1,0 +1,31 @@
+# ansible_ssh_user: vagrant
+# remote_user: vagrant
+# #sudo_user: ubuntu
+# local_sudo_user: root
+# private_key_file: ~/.vagrant.d/insecure_private_key
+#
+#
+#
+# # Application Git repo variables
+# # only enable git_repo or git_local_repo
+# #
+# git_repo_local: /project_repo
+# git_branch: HEAD
+
+# provider info
+provider: vagrant
+
+vagrant_nodes:
+  - name: db2
+    groups:
+      - dbservers
+      - queues
+    ip: '192.168.202.20'
+  - name: web2
+    groups:
+      - webservers
+      - taskservers
+    ip: '192.168.202.10'
+
+
+#

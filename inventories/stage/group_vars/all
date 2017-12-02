@@ -1,7 +1,0 @@
----
-pipeline: stage
-# dp variables listed here because they needed in local-settings.py.j2 in web groub as in db group
-dbname: stage_db
-dbuser: stage_user
-# dbpass: stage_pass
-dbport: 5432

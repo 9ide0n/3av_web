@@ -1,0 +1,2 @@
+- include_tasks: vagrant_up.yml
+- include_tasks: add_to_localhosts.yml

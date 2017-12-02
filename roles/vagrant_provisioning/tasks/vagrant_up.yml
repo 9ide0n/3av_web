@@ -1,0 +1,54 @@
+- name: ensure local project workspace exists
+  file:
+    path: "{{project_source_directory}}"
+    state: directory
+  tags: provision
+
+- name: copy Vagrantfile
+  template:
+    src: "{{item}}"
+    dest: "{{project_deploy_directory}}/Vagrantfile"
+  with_first_found:
+    - files:
+        - "{{vagrant_template_vagrantfile}}"
+      skip: true
+  notify: "reload and provision vagrant"
+  tags: provision
+
+- name: copy provision.yml file
+  template:
+    src: "{{item}}"
+    dest: "{{project_deploy_directory}}/provision.yml"
+  with_first_found:
+    - files:
+        - "{{vagrant_template_ansible}}"
+      skip: true
+  notify: "reload and provision vagrant"
+  tags: provision
+
+- meta: flush_handlers
+
+- name: execute vagrant up against Vagrantfile
+  command: "vagrant up"
+  args:
+    chdir: "{{project_deploy_directory}}"
+  tags: provision
+
+- name: execute vagrant provision to ensure inventory is refreshed
+  command: "vagrant provision"
+  args:
+    chdir: "{{project_deploy_directory}}"
+  tags: provision
+
+- name: ensure local inventory link does not exists
+  file:
+    path: "{{project_ansible_directory}}/inventory/{{ pipeline }}"
+    state: absent
+  tags: provision
+
+- name: link local inventory into deploy directory
+  file:
+    src: "{{project_deploy_directory}}/.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory"
+    dest: "{{project_ansible_directory}}/inventory/{{ pipeline }}"
+    state: link
+  tags: provision

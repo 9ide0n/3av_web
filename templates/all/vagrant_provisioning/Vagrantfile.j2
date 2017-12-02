@@ -1,0 +1,70 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.synced_folder "{{ project_source_directory }}", "/projects"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.ssh.forward_agent = true
+
+
+
+  nodes = [
+  {% for node in vagrant_nodes %}
+    {:groups => ['{{ node.groups | join(",") }}'], :name => :{{ node.name }}, :ip => '{{ node.ip }}' {% if node.http is defined %} ,:http => {{node.http}} {% endif %} {% if node.ssl is defined %},:ssl => {{node.ssl}}{% endif %} },
+  {% endfor %}
+  ]
+
+  groups = {"all_groups:children" => []}
+
+  nodes.each do |node|
+    if node.has_key?(:groups)
+      node[:groups].each do |group|
+        group.split(',').each do |g|
+          if groups.has_key?(g)
+            groups[g] << node[:name].to_s
+          else
+            groups[g] = [node[:name].to_s]
+            groups['all_groups:children'] << g
+          end
+        end
+
+      end
+    end
+  end
+
+
+  nodes.each do |node|
+    config.vm.define node[:name] do |cfg|
+
+
+      # required parameters
+      cfg.vm.hostname = node[:name].to_s
+      cfg.vm.network :private_network, ip: node[:ip]
+
+      #optional parameters
+      cfg.vm.network "forwarded_port", guest: 80, host: node[:http] if node.has_key?(:http_port)
+      cfg.vm.network "forwarded_port", guest: 443, host: node[:ssl] if node.has_key?(:ssl_port)
+
+      cfg.vm.provision :hosts do |provisioner|
+        provisioner.autoconfigure = true
+        provisioner.add_host node[:ip], [cfg.vm.hostname, cfg.vm.hostname+".dev.local" ]
+      end
+
+      cfg.vm.provision :shell, inline: <<-SHELL
+      if [[ ! -f /usr/bin/python ]]; then
+        apt-get update
+        apt-get install -y python
+      fi
+      SHELL
+
+      cfg.vm.provision "ansible" do |ansible|
+        ansible.playbook = "provision.yml"
+        ansible.groups = groups if node.equal? nodes.last
+      end
+    end
+  end
+
+end

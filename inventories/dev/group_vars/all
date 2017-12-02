@@ -1,7 +1,0 @@
----
-pipeline: dev
-# dp variables listed here because they needed in local-settings.py.j2 in web groub as in db group
-dbname: kill_me
-dbuser: suicide
-# dbpass: rip
-dbport: 5432

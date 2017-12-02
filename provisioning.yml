@@ -1,0 +1,16 @@
+- name: Perform the provisioning from localhost
+  hosts: localhost
+  gather_facts: False
+  vars_files:
+    - group_vars/all
+    - pipeline/{{ pipeline }}/vars.yml
+    # - pipeline/{{ pipeline }}/secrets.yml
+    # - group_vars/dbservers
+  roles:
+    - role: aws_provisioning
+      when: provider == 'aws'
+
+    - role: vagrant_provisioning
+      vagrant_template_vagrantfile: "templates/all/vagrant_provisioning/Vagrantfile.j2"
+      vagrant_template_ansible: "templates/all/vagrant_provisioning/provision.yml.j2"
+      when: provider == 'vagrant'
