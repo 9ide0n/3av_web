@@ -45,6 +45,22 @@
     line='source /usr/local/bin/virtualenvwrapper.sh'
     insertafter=EOF
 
+- name: Add cd to project dir to .bashrc
+  lineinfile: >
+    dest=~/.bashrc
+    state=present
+    regexp='^cd {{project_path}}'
+    line='cd {{project_path}}'
+    insertafter=EOF
+
+- name: Add switch to virtualenv to .bashrc
+  lineinfile: >
+    dest=~/.bashrc
+    state=present
+    regexp='^workon {{project_name}}'
+    line='workon {{project_name}}'
+    insertafter=EOF
+
 - name: install required python3 packages into project virtualenv
   pip: name={{ item }} virtualenv={{ project_venv_path }}   virtualenv_python="python{{project_python_version}}"
   with_items:

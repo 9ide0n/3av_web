@@ -1,5 +1,0 @@
-# - include_vars: "inventories/shared-secrets.yml"
-- name: include shared variables file
-  include_vars: "inventories/shared_vars.yml"
-- name: include secrets variables file for current pipeline
-  include_vars: "inventories/{{ pipeline }}/secrets.yml"
