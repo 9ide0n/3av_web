@@ -25,16 +25,16 @@
   lineinfile: >
     dest=~/.bashrc
     state=present
-    regexp='^export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3'
-    line=export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3'
+    regexp='^export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python{{project_python_version}}'
+    line='export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python{{project_python_version}}'
     insertafter=EOF
 
 - name: Add WORKON_HOME to .bashrc
   lineinfile: >
     dest=~/.bashrc
     state=present
-    regexp='^export WORKON_HOME\={{project_venv_path}}'
-    line='export WORKON_HOME={{project_venv_path}}'
+    regexp='^export WORKON_HOME\={{project_venv_home}}'
+    line='export WORKON_HOME={{project_venv_home}}'
     insertafter=EOF
 
 - name: Add source /usr/local/bin/virtualenvwrapper.sh to .bashrc
@@ -44,7 +44,7 @@
     regexp='^source \/usr\/local\/bin\/virtualenvwrapper\.sh'
     line='source /usr/local/bin/virtualenvwrapper.sh'
     insertafter=EOF
-    
+
 - name: install required python3 packages into project virtualenv
   pip: name={{ item }} virtualenv={{ project_venv_path }}   virtualenv_python="python{{project_python_version}}"
   with_items:
