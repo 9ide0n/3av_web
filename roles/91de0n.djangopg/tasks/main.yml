@@ -8,8 +8,11 @@
     - python3-pip
     - python-pip
 
+# - debug:
+#     msg: "{{ project_repo_url }}"
+
 - name: check out git repository of project, clone if needed
-  git: repo={{ project_repo_url }} dest={{ project_repo_path }} accept_hostkey=yes force=yes
+  git: repo="{{ project_repo_url }}" dest="{{ project_repo_path }}" accept_hostkey=yes force=yes
 
 - name: install python3 virtualenvs
   pip: name={{ item }} state=latest executable="pip{{project_python_version}}"

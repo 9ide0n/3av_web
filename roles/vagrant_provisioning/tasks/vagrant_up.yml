@@ -4,29 +4,21 @@
     state: directory
   tags: provision
 
-- name: copy Vagrantfile
-  template:
-    src: "{{item}}"
-    dest: "{{project_deploy_directory}}/Vagrantfile"
-  with_first_found:
-    - files:
-        - "{{vagrant_template_vagrantfile}}"
-      skip: true
-  notify: "reload and provision vagrant"
-  tags: provision
 
-- name: copy provision.yml file
-  template:
-    src: "{{item}}"
-    dest: "{{project_deploy_directory}}/provision.yml"
-  with_first_found:
-    - files:
-        - "{{vagrant_template_ansible}}"
-      skip: true
-  notify: "reload and provision vagrant"
-  tags: provision
+# - name: copy provision.yml file
+#   template:
+#     src: "{{item}}"
+#     dest: "{{project_deploy_directory}}/provision.yml"
+#   with_first_found:
+#     - files:
+#         - "{{vagrant_template_ansible}}"
+#       skip: true
+#   notify: "reload and provision vagrant"
+#   tags: provision
+- include_tasks: copy_vagrantfile.yml ansible_provision=stubprovision.yml
 
-- meta: flush_handlers
+# - meta: flush_handlers
+#   tags: provision
 
 - name: execute vagrant up against Vagrantfile
   command: "vagrant up"
@@ -52,3 +44,5 @@
     dest: "{{project_ansible_directory}}/inventory/{{ pipeline }}"
     state: link
   tags: provision
+
+- include_tasks: copy_vagrantfile.yml ansible_provision=site.yml

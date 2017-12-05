@@ -61,7 +61,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       SHELL
 
       cfg.vm.provision "ansible" do |ansible|
-        ansible.playbook = "provision.yml"
+        ansible.playbook = "{{project_ansible_directory}}/{{ansible_provision}}"
+        ansible.config_file = "{{project_ansible_directory}}/ansible.cfg"
+        {% if ansible_provision == "site.yml" %}
+        ansible.extra_vars = {pipeline: "{{pipeline}}"}
+        {% endif %}
         ansible.groups = groups if node.equal? nodes.last
       end
     end

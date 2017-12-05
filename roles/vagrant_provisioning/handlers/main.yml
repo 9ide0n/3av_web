@@ -1,4 +1,4 @@
-- name: execute vagrant up against Vagrantfile
+- name: execute vagrant reload against Vagrantfile
   command: "vagrant reload"
   args:
     chdir: "{{project_deploy_directory}}"

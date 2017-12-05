@@ -31,7 +31,7 @@ project_home: "/projects"
 
 project_logs: "{{ project_home }}/logs"
 
-project_repo_url: git@github.com:9ide0n/djangoapp.git
+project_repo_url: "git@github.com:9ide0n/djangoapp.git"
 project_repo_path: "{{ project_home }}/{{ project_name }}"
 
 project_path: "{{project_repo_path}}"
