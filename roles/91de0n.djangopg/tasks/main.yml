@@ -12,7 +12,7 @@
   register: p
 
 - name: check out git repository of project, clone if needed
-  git: repo="{{ project_repo_url }}" dest="{{ project_repo_path }}" accept_hostkey=yes force=yes
+  git: repo="{{ project_repo_url }}" dest="{{ project_repo_path }}" accept_hostkey=yes force=yes version=develop
   when: p.stat.exists == false
 
 - name: install python3 virtualenvs
@@ -78,7 +78,7 @@
         - "{{djangopg_template_localsettingspy}}"
       skip: True
   when: p.stat.exists == false
-  
+
 - name: apply migrations to create the database, collect static content
   django_manage:
     command: "{{ item }}"
@@ -86,7 +86,7 @@
     virtualenv: "{{ project_venv_path }}"
   with_items:
     - makemigrations
-    - "makemigrations polls"
+    # - "makemigrations polls"
     - migrate
     - collectstatic
 
