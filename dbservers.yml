@@ -10,8 +10,8 @@
 
   roles:
     - role: 91de0n.postgrespro
-      postgrespro_template_pghbaconf: "templates/all/postgrespro/pg_hba.conf.j2"
-      postgrespro_template_postgresqlconf: "templates/all/postgrespro/postgresql.conf.j2"
+      postgrespro_template_pghbaconf: "templates/{{pipeline}}/postgrespro/pg_hba.conf.j2"
+      postgrespro_template_postgresqlconf: "templates/{{pipeline}}/postgrespro/postgresql.conf.j2"
       when: "provider != 'aws'"
 
     - role: 91de0n.postgrespro_initdb

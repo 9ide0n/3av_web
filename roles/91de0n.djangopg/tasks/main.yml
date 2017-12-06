@@ -8,11 +8,12 @@
     - python3-pip
     - python-pip
 
-# - debug:
-#     msg: "{{ project_repo_url }}"
+- stat: path="{{project_path}}/.git"
+  register: p
 
 - name: check out git repository of project, clone if needed
   git: repo="{{ project_repo_url }}" dest="{{ project_repo_path }}" accept_hostkey=yes force=yes
+  when: p.stat.exists == false
 
 - name: install python3 virtualenvs
   pip: name={{ item }} state=latest executable="pip{{project_python_version}}"
@@ -67,13 +68,17 @@
     - psycopg2
     - django
 
+- stat: path="{{ project_settings_path }}/local_settings.py"
+  register: p
+
 - name: generate the settings file
   template: src={{item}} dest={{ project_settings_path }}/local_settings.py
   with_first_found:
     - files:
         - "{{djangopg_template_localsettingspy}}"
       skip: True
-
+  when: p.stat.exists == false
+  
 - name: apply migrations to create the database, collect static content
   django_manage:
     command: "{{ item }}"
