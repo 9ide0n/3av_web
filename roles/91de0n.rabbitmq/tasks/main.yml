@@ -1,0 +1,68 @@
+---
+- block:
+
+  - name: add erlang repo key
+    apt_key:
+      url: "https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc"
+      state: present
+
+  - name: add erlang repo
+    apt_repository:
+      repo: "deb https://packages.erlang-solutions.com/ubuntu {{ansible_distribution_release}} contrib"
+      filename: erlang
+      state: present
+      update_cache: yes
+
+  - name: install apt packages
+    apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+    with_items:
+      - erlang
+
+  - name: ensure python-software-properties is installed
+    apt: pkg=python-software-properties state=installed
+
+  - name: add rabbitmq repo key
+    apt_key:
+      url: "https://www.rabbitmq.com/rabbitmq-release-signing-key.asc"
+      state: present
+
+  - name: add rabbitmq repo
+    apt_repository:
+      repo: "deb https://dl.bintray.com/rabbitmq/debian {{ansible_distribution_release}} main"
+      filename: rabbitmq
+      state: present
+      update_cache: yes
+
+  - name: install apt packages
+    apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+    with_items:
+      - rabbitmq-server
+
+  - name: enable rabbitmq plugins
+    rabbitmq_plugin: names=rabbitmq_management,rabbitmq_tracing,rabbitmq_federation state=enabled
+    notify:
+    - restart rabbitmq
+
+  - name: ensure vhost /test is present
+    rabbitmq_vhost: name=/test state=present
+
+  - name: create vhost to work with
+    rabbitmq_vhost: name="{{rabbitmq_vhost_var}}" state=present
+
+  - name: add users
+    rabbitmq_user:
+      user: "{{item}}"
+      password: "{{rabbitmq_password_var}}"
+      tags: "administrator,{{item}}"
+      vhost: "{{rabbitmq_vhost_var}}"
+      configure_priv: ".*"
+      write_priv: ".*"
+      read_priv: ".*"
+      state: present
+    with_items:
+    - "{{rabbitmq_user_var}}"
+
+  - name: remove default guest user
+    rabbitmq_user: user=guest state=absent
+
+  become: True

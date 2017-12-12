@@ -4,4 +4,4 @@ project_domains:
 - "{{project_host}}.dev.local"
 project_nginx: false
 project_gunicorn: false
-project_memcached: false
+project_memcached: true

@@ -1,0 +1,17 @@
+- hosts:
+    - queues
+
+  vars_files:
+    - group_vars/all
+    - pipeline/{{ pipeline }}/secrets.yml
+    - pipeline/{{ pipeline }}/vars.yml
+    - pipeline/{{ pipeline }}/queue_vars.yml
+
+
+  roles:
+    - role: 91de0n.rabbitmq
+      rabbitmq_vhost_var: "{{queue_vhost}}"
+      rabbitmq_user_var: "{{queue_user}}"
+      rabbitmq_password_var: "{{queue_pass}}"
+
+      when: "provider != 'aws'"

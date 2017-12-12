@@ -3,4 +3,6 @@
 
 - import_playbook: dbservers.yml
 
+- import_playbook: queues.yml
+
 - import_playbook: webservers.yml

@@ -1,0 +1,4 @@
+---
+rabbitmq_vhost_var: /myvhost
+rabbitmq_user_var: myuser
+rabbitmq_password_var: mypassword
