@@ -1,0 +1,6 @@
+---
+- name: install celery and flower into project virtualenv
+  pip: name={{ item }} virtualenv={{ project_venv_path }}   virtualenv_python="python{{project_python_version}}"
+  with_items:
+    - celery
+    - flower

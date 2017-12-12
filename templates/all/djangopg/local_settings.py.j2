@@ -22,7 +22,7 @@ DATABASES = {
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
 {% endif %} {#project_nginx#}
 
-{% if project_memcached  %}
+{% if project_cache  %}
 CACHE_MIDDLEWARE_SECONDS = 60
 
 CACHE_MIDDLEWARE_KEY_PREFIX = "{{ project_name }}"
@@ -36,4 +36,9 @@ CACHES = {
 
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-{% endif  %} {#project_memcached#}
+{% endif  %} {#project_cache#}
+
+{% if project_task %}
+CELERY_BROKER_URL = "amqp://{{queue_user}}:{{queue_pass}}@{{queue_host}}:5672/{{queue_vhost}}"
+CELERY_RESULT_BACKEND = 'cache+memcached://127.0.0.1:11211/'
+{% endif %} {#project_task#}

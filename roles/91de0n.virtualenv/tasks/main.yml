@@ -1,0 +1,57 @@
+---
+- name: install packages needed for deployment
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+  become: True
+  with_items:
+    - python3-pip
+    - python-pip
+
+- name: install python3 virtualenvs
+  pip: name={{ item }} state=latest executable="pip{{project_python_version}}"
+  with_items:
+    - virtualenv
+    - virtualenvwrapper
+  become: True
+
+- name: Add VIRTUALENVWRAPPER_PYTHON to .bashrc
+  lineinfile: >
+    dest=~/.bashrc
+    state=present
+    regexp='^export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python{{project_python_version}}'
+    line='export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python{{project_python_version}}'
+    insertafter=EOF
+
+- name: Add WORKON_HOME to .bashrc
+  lineinfile: >
+    dest=~/.bashrc
+    state=present
+    regexp='^export WORKON_HOME\={{project_venv_home}}'
+    line='export WORKON_HOME={{project_venv_home}}'
+    insertafter=EOF
+
+- name: Add source /usr/local/bin/virtualenvwrapper.sh to .bashrc
+  lineinfile: >
+    dest=~/.bashrc
+    state=present
+    regexp='^source \/usr\/local\/bin\/virtualenvwrapper\.sh'
+    line='source /usr/local/bin/virtualenvwrapper.sh'
+    insertafter=EOF
+
+- name: Add cd to project dir to .bashrc
+  lineinfile: >
+    dest=~/.bashrc
+    state=present
+    regexp='^cd {{project_path}}'
+    line='cd {{project_path}}'
+    insertafter=EOF
+
+- name: Add switch to virtualenv to .bashrc
+  lineinfile: >
+    dest=~/.bashrc
+    state=present
+    regexp='^workon {{project_name}}'
+    line='workon {{project_name}}'
+    insertafter=EOF
+    
+- name: create a logs directory
+  file: path="{{project_logs}}" state=directory

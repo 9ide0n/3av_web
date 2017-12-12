@@ -6,14 +6,18 @@
     - pipeline/{{ pipeline }}/vars.yml
     - pipeline/{{ pipeline }}/web_vars.yml
     - pipeline/{{ pipeline }}/db_vars.yml
+    - pipeline/{{ pipeline }}/taskqueue_vars.yml
     - group_vars/webservers
     - group_vars/dbservers
   roles:
+
+    - role: 91de0n.virtualenv
+    
     - role: 91de0n.djangopg
       djangopg_template_localsettingspy: "templates/all/djangopg/local_settings.py.j2"
 
     - role: 91de0n.memcached
-      when: project_memcached
+      when: project_cache
 
     - role: 91de0n.gunicorn
       gunicorn_template_gunicornconfpy: "templates/all/gunicorn/gunicorn.conf.py.j2"

@@ -1,2 +1,4 @@
+queue_host: db2
 queue_vhost: killer
 queue_user: kill_me
+project_task: true

@@ -5,7 +5,7 @@
     - group_vars/all
     - pipeline/{{ pipeline }}/secrets.yml
     - pipeline/{{ pipeline }}/vars.yml
-    - pipeline/{{ pipeline }}/queue_vars.yml
+    - pipeline/{{ pipeline }}/taskqueue_vars.yml
 
 
   roles:
@@ -14,4 +14,4 @@
       rabbitmq_user_var: "{{queue_user}}"
       rabbitmq_password_var: "{{queue_pass}}"
 
-      when: "provider != 'aws'"
+      when: "provider != 'aws' and project_task"

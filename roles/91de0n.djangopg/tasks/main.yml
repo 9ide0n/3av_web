@@ -5,8 +5,6 @@
   become: True
   with_items:
     - git
-    - python3-pip
-    - python-pip
 
 - stat: path="{{project_path}}/.git"
   register: p
@@ -14,53 +12,6 @@
 - name: check out git repository of project, clone if needed
   git: repo="{{ project_repo_url }}" dest="{{ project_repo_path }}" accept_hostkey=yes force=yes version=develop
   when: p.stat.exists == false
-
-- name: install python3 virtualenvs
-  pip: name={{ item }} state=latest executable="pip{{project_python_version}}"
-  with_items:
-    - virtualenv
-    - virtualenvwrapper
-  become: True
-
-- name: Add VIRTUALENVWRAPPER_PYTHON to .bashrc
-  lineinfile: >
-    dest=~/.bashrc
-    state=present
-    regexp='^export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python{{project_python_version}}'
-    line='export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python{{project_python_version}}'
-    insertafter=EOF
-
-- name: Add WORKON_HOME to .bashrc
-  lineinfile: >
-    dest=~/.bashrc
-    state=present
-    regexp='^export WORKON_HOME\={{project_venv_home}}'
-    line='export WORKON_HOME={{project_venv_home}}'
-    insertafter=EOF
-
-- name: Add source /usr/local/bin/virtualenvwrapper.sh to .bashrc
-  lineinfile: >
-    dest=~/.bashrc
-    state=present
-    regexp='^source \/usr\/local\/bin\/virtualenvwrapper\.sh'
-    line='source /usr/local/bin/virtualenvwrapper.sh'
-    insertafter=EOF
-
-- name: Add cd to project dir to .bashrc
-  lineinfile: >
-    dest=~/.bashrc
-    state=present
-    regexp='^cd {{project_path}}'
-    line='cd {{project_path}}'
-    insertafter=EOF
-
-- name: Add switch to virtualenv to .bashrc
-  lineinfile: >
-    dest=~/.bashrc
-    state=present
-    regexp='^workon {{project_name}}'
-    line='workon {{project_name}}'
-    insertafter=EOF
 
 - name: install required python3 packages into project virtualenv
   pip: name={{ item }} virtualenv={{ project_venv_path }}   virtualenv_python="python{{project_python_version}}"
@@ -86,9 +37,5 @@
     virtualenv: "{{ project_venv_path }}"
   with_items:
     - makemigrations
-    # - "makemigrations polls"
     - migrate
     - collectstatic
-
-- name: create a logs directory for supervisor and gunicorn
-  file: path="{{project_logs}}" state=directory

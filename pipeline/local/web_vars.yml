@@ -3,8 +3,7 @@ webhost: "web2"
 project_domains:
 - "{{webhost}}"
 - "{{webhost}}.dev.local"
-project_memcached: true
-
+project_cache: true
 # --- gunicorn+supervisor settings
 project_gunicorn: true
 project_gunicorn_num_workers: "multiprocessing.cpu_count() * 2 + 1"
