@@ -1,4 +1,11 @@
 ---
-- name: restart supervisor
-  supervisorctl: name={{project_gunicorn_procname}} state=restarted
+- name: supervisorctl update
+  command:  supervisorctl update
+  # supervisorctl: name="{{supervisor_conf_name}}{{supervisor_group}}" state=restarted
   become: True
+  listen: restart supervisor
+
+- name:  supervisorctl restart all
+  command:  supervisorctl restart all
+  become: True
+  listen: restart supervisor

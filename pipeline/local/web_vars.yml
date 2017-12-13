@@ -1,5 +1,5 @@
-project_host: "db2"
-webhost: "web2"
+project_host: db
+webhost: web
 project_domains:
 - "{{webhost}}"
 - "{{webhost}}.dev.local"

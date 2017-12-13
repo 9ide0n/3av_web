@@ -66,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         {% if ansible_provision == "site.yml" %}
         ansible.extra_vars = {pipeline: "{{pipeline}}"}
         {% endif %}
-        ansible.groups = groups if node.equal? nodes.last
+        ansible.groups = groups #if node.equal? nodes.last
       end
     end
   end

@@ -1,4 +1,11 @@
-queue_host: db2
+queue_host: db
 queue_vhost: killer
 queue_user: kill_me
+queue_port: 5672
+queue_type: amqp
+queue_list:
+  - low
+  - normal
+  - high
 project_task: true
+project_task_autorun: true

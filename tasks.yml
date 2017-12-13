@@ -17,3 +17,8 @@
 
     - role: 91de0n.celery
       when: project_task
+
+    - role: 91de0n.supervisor
+      supervisor_conf_name: "celery"
+      supervisor_template_supervisorconf: "templates/all/supervisor/celery.conf.j2"
+      when: project_task_autorun

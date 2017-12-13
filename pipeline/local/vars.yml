@@ -16,16 +16,23 @@
 provider: vagrant
 
 vagrant_nodes:
-  - name: db2
+  - name: db
     groups:
       - dbservers
       - queues
-    ip: '192.168.202.20'
-  - name: web2
+    ip: '192.168.200.20'
+  - name: web
     groups:
       - webservers
       - taskservers
-    ip: '192.168.202.10'
-
+    ip: '192.168.200.10'
+  - name: task1
+    groups:
+      - taskservers
+    ip: '192.168.200.31'
+  - name: task2
+    groups:
+      - taskservers
+    ip: '192.168.200.32'
 
 #

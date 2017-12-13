@@ -6,10 +6,10 @@
     - supervisor
 
 - name: set the supervisor config file
-  template: src={{item}} dest="/etc/supervisor/conf.d/{{project_name}}.conf"
+  template: src={{item}} dest="/etc/supervisor/conf.d/{{supervisor_conf_name}}.conf"
   with_first_found:
     - files:
         - "{{supervisor_template_supervisorconf}}"
       skip: True
   become: True
-  notify: restart supervisor
+  notify: "restart supervisor"
