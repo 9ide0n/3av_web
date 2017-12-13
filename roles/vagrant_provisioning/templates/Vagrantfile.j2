@@ -5,7 +5,6 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/xenial64"
-  config.vm.synced_folder "{{ project_source_directory }}", "/projects"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   config.ssh.forward_agent = true
 
@@ -39,9 +38,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   nodes.each do |node|
     config.vm.define node[:name] do |cfg|
 
-
+      dir = node[:name].to_s
+      sync_folder = File.join(Dir.getwd, dir)
+      Dir.mkdir(sync_folder) unless File.exists?(sync_folder)
+      config.vm.synced_folder sync_folder, "/projects"
       # required parameters
-      cfg.vm.hostname = node[:name].to_s
+      cfg.vm.hostname = dir
       cfg.vm.network :private_network, ip: node[:ip]
 
       #optional parameters

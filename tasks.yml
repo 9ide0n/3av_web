@@ -6,7 +6,10 @@
     - pipeline/{{ pipeline }}/secrets.yml
     - pipeline/{{ pipeline }}/vars.yml
     - pipeline/{{ pipeline }}/taskqueue_vars.yml
-
+    - pipeline/{{ pipeline }}/web_vars.yml
+    - pipeline/{{ pipeline }}/db_vars.yml
+    - group_vars/webservers
+    - group_vars/dbservers
 
   roles:
     - role: 91de0n.virtualenv
@@ -16,6 +19,10 @@
       when: project_task
 
     - role: 91de0n.celery
+      when: project_task
+
+    - role: 91de0n.djangopg
+      djangopg_template_localsettingspy: "templates/all/djangopg/local_settings.py.j2"
       when: project_task
 
     - role: 91de0n.supervisor

@@ -1,6 +1,6 @@
 {% for item in queue_list %}
 [program:{{item}}]
-command = {{ project_venv_path }}/bin/celery worker -A {{ project_name }} --loglevel=info -n {{item}}@%h -Q {{item}}
+command = {{ project_venv_path }}/bin/celery worker -A {{ project_name }} --loglevel=info -n {{item}}@%%h -Q {{item}}
 directory={{ project_path }}
 user={{ project_user }}
 numprocs=1

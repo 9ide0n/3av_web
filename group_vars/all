@@ -25,5 +25,5 @@ locale: ru_RU.UTF-8
 project_app: djangopg
 #localhost
 project_deploy_directory: "/datastore/projects/APP/{{pipeline}}/{{project_app}}"
-project_source_directory: "{{project_deploy_directory}}/www"
+# project_source_directory: "{{project_deploy_directory}}/www"
 project_ansible_directory: "{{playbook_dir}}"
