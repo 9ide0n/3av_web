@@ -1,0 +1,8 @@
+  - name: Set array with webhost private ip (need for secure services bindings)
+    set_fact:
+      webip: |
+          {% set res = [] -%}
+          {% for node in vagrant_nodes   if node.name | string() == webhost | string() -%}
+            {% set ignore = res.extend([node.ip]) -%}
+          {%- endfor %}
+          {{ res }}

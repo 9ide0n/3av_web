@@ -9,3 +9,14 @@
   pip: name={{ item }} virtualenv={{ project_venv_path }}   virtualenv_python="python{{project_python_version}}"
   with_items:
     - python-memcached
+
+- name: Modify memcached listen ip
+  become: True
+  lineinfile: >
+    dest=/etc/memcached.conf
+    state=present
+    regexp='^-l .*$'
+    line='-l {{memcached_listen_ip}}'
+    insertafter=EOF
+  notify:
+    - restart memcached

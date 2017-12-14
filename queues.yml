@@ -1,12 +1,14 @@
 - hosts:
     - queues
 
-  vars_files:
+  pre_tasks:
+  - include_vars: "{{item}}"
+    with_items:
     - group_vars/all
     - pipeline/{{ pipeline }}/secrets.yml
     - pipeline/{{ pipeline }}/vars.yml
     - pipeline/{{ pipeline }}/taskqueue_vars.yml
-
+  # - include_tasks: tasks/load_vars.yml
 
   roles:
     - role: 91de0n.rabbitmq

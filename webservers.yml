@@ -1,14 +1,19 @@
 - hosts:
     - webservers
-  vars_files:
+
+  pre_tasks:
+  - include_vars: "{{item}}"
+    with_items:
     - group_vars/all
     - pipeline/{{ pipeline }}/secrets.yml
     - pipeline/{{ pipeline }}/vars.yml
+    - pipeline/{{ pipeline }}/taskqueue_vars.yml
     - pipeline/{{ pipeline }}/web_vars.yml
     - pipeline/{{ pipeline }}/db_vars.yml
-    - pipeline/{{ pipeline }}/taskqueue_vars.yml
     - group_vars/webservers
     - group_vars/dbservers
+  - include_tasks: tasks/load_vars.yml
+
   roles:
 
     - role: 91de0n.virtualenv
@@ -17,7 +22,8 @@
       djangopg_template_localsettingspy: "templates/all/djangopg/local_settings.py.j2"
 
     - role: 91de0n.memcached
-      when: project_cache
+      memcached_listen_ip: "{{webip[0]}}"
+      when: project_cache or project_task
 
     - role: 91de0n.gunicorn
       gunicorn_template_gunicornconfpy: "templates/all/gunicorn/gunicorn.conf.py.j2"
