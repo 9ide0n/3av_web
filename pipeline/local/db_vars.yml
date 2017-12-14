@@ -1,5 +1,5 @@
-dbname: stage_db
-dbuser: stage_user
-dbport: 5432
+project_dbname: stage_db
+project_dbuser: stage_user
+project_dbport: 5432
 
-# test: "{{vagrant_nodes}}"
+# test: "{{project_vagrant_nodes}}"

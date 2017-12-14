@@ -1,5 +1,5 @@
-dbname: kill_me
-dbuser: suicide
-dbport: 5432
+project_dbname: kill_me
+project_dbuser: suicide
+project_dbport: 5432
 
-# test: "{{vagrant_nodes}}"
+# test: "{{project_vagrant_nodes}}"

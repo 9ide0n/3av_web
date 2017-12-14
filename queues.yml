@@ -12,8 +12,8 @@
 
   roles:
     - role: 91de0n.rabbitmq
-      rabbitmq_vhost_var: "{{queue_vhost}}"
-      rabbitmq_user_var: "{{queue_user}}"
-      rabbitmq_password_var: "{{queue_pass}}"
+      rabbitmq_vhost_var: "{{project_queue_vhost}}"
+      rabbitmq_user_var: "{{project_queue_user}}"
+      rabbitmq_password_var: "{{project_queue_pass}}"
 
-      when: "provider != 'aws' and project_task"
+      when: "project_provider != 'aws' and project_task"

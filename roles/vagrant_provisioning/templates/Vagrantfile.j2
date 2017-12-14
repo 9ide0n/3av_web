@@ -11,7 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
   nodes = [
-  {% for node in vagrant_nodes %}
+  {% for node in project_vagrant_nodes %}
     {:groups => ['{{ node.groups | join(",") }}'], :name => :{{ node.name }}, :ip => '{{ node.ip }}' {% if node.http is defined %} ,:http => {{node.http}} {% endif %} {% if node.ssl is defined %},:ssl => {{node.ssl}}{% endif %} },
   {% endfor %}
   ]

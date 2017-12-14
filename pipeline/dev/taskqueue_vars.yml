@@ -1,9 +1,8 @@
-queue_host: web1
-queue_vhost: killer
-queue_user: kill_me
-queue_port: 5672
-queue_type: amqp
-queue_list:
+project_queue_vhost: killer
+project_queue_user: kill_me
+project_queue_port: 5672
+project_queue_type: amqp
+project_queue_list:
   - low
   - normal
   - high

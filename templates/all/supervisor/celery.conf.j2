@@ -1,4 +1,4 @@
-{% for item in queue_list %}
+{% for item in project_queue_list %}
 [program:{{item}}]
 command = {{ project_venv_path }}/bin/celery worker -A {{ project_name }} --loglevel=info -n {{item}}@%%h -Q {{item}}
 directory={{ project_path }}
@@ -15,7 +15,7 @@ priority=998
 {% endfor %}
 
 [program:flower]
-command = {{ project_venv_path }}/bin/celery -A {{ project_name }} flower --broker={{queue_type}}://{{queue_user}}:{{queue_pass}}@{{queue_host}}:{{queue_port}}/{{queue_vhost}}
+command = {{ project_venv_path }}/bin/celery -A {{ project_name }} flower --broker={{project_queue_type}}://{{project_queue_user}}:{{project_queue_pass}}@{{project_queue_host}}:{{project_queue_port}}/{{project_queue_vhost}}
 directory={{ project_path }}
 user={{ project_user }}
 numprocs=1
@@ -29,5 +29,5 @@ killasgroup=true
 priority=998
 
 [group:{{supervisor_conf_name}}]
-programs={{ queue_list|join(", ") }},flower
+programs={{ project_queue_list|join(", ") }},flower
 priority=999

@@ -1,8 +1,3 @@
-project_host: db
-webhost: web
-project_domains:
-- "{{webhost}}"
-- "{{webhost}}.dev.local"
 project_cache: true
 # --- gunicorn+supervisor settings
 project_gunicorn: true

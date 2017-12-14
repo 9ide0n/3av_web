@@ -1,8 +1,8 @@
-  - name: Set array with webhost private ip (need for secure services bindings)
+  - name: Set array with project_memcached_host private ip (need for secure services bindings)
     set_fact:
       webip: |
           {% set res = [] -%}
-          {% for node in vagrant_nodes   if node.name | string() == webhost | string() -%}
+          {% for node in project_vagrant_nodes   if node.name | string() == project_memcached_host | string() -%}
             {% set ignore = res.extend([node.ip]) -%}
           {%- endfor %}
           {{ res }}

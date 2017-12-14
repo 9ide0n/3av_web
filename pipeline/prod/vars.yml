@@ -29,7 +29,7 @@ git_branch: master
 #
 ansible_ssh_user: ubuntu
 #
-provider: aws
+project_provider: aws
 region: eu-west-1
 # Web teir instances
 web_instance_type: t1.micro

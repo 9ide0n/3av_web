@@ -5,15 +5,15 @@ DATABASES = {
         # Ends with "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         # DB name or path to database file if using sqlite3.
-        "NAME": "{{ dbname }}",
+        "NAME": "{{project_dbname}}",
         # Not used with sqlite3.
-        "USER": "{{ dbuser }}",
+        "USER": "{{project_dbuser}}",
         # Not used with sqlite3.
-        "PASSWORD": "{{ dbpass }}",
+        "PASSWORD": "{{project_dbpass}}",
         # Set to empty string for localhost. Not used with sqlite3.
-        "HOST": "{{ project_host }}",
+        "HOST": "{{ project_dbhost}}",
         # Set to empty string for default. Not used with sqlite3.
-        "PORT": "{{ dbport }}",
+        "PORT": "{{project_dbport}}",
     }
 }
 
@@ -30,7 +30,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = "{{ project_name }}"
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
-        "LOCATION": "{{webip[0]}}:11211",
+        "LOCATION": "{{project_memcached_host}}:11211",
     }
 }
 
@@ -39,6 +39,6 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 {% endif  %} {#project_cache#}
 
 {% if project_task %}
-CELERY_BROKER_URL = "{{queue_type}}://{{queue_user}}:{{queue_pass}}@{{queue_host}}:{{queue_port}}/{{queue_vhost}}"
-CELERY_RESULT_BACKEND = 'cache+memcached://{{webip[0]}}:11211/'
+CELERY_BROKER_URL = "{{project_queue_type}}://{{project_queue_user}}:{{project_queue_pass}}@{{project_queue_host}}:{{project_queue_port}}/{{project_queue_vhost}}"
+CELERY_RESULT_BACKEND = 'cache+memcached://{{project_memcached_host}}:11211/'
 {% endif %} {#project_task#}

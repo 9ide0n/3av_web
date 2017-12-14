@@ -12,14 +12,14 @@
     - pipeline/{{ pipeline }}/db_vars.yml
     - group_vars/webservers
     - group_vars/dbservers
-  - include_tasks: tasks/load_vars.yml
+  # - include_tasks: tasks/load_vars.yml
 
   roles:
     - role: 91de0n.virtualenv
       when: project_task
 
     - role: 91de0n.memcached
-      # memcached_listen_ip: "{{webip[0]}}"
+      # memcached_listen_ip: "{{project_memcached_host}}"
       when: project_task
 
     - role: 91de0n.celery

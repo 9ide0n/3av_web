@@ -1,7 +1,3 @@
-project_host: "web1"
-project_domains:
-- "{{project_host}}"
-- "{{project_host}}.dev.local"
 project_nginx: false
 project_gunicorn: false
 project_cache: true

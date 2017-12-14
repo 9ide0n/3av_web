@@ -4,5 +4,5 @@
     dest: /etc/hosts
     regexp: '^{{ item.ip }}  {{ item.name }} {{ item.name }}\.dev\.local'
     line: "{{ item.ip }}  {{ item.name }} {{ item.name }}.dev.local"
-  with_items: "{{vagrant_nodes}}"
+  with_items: "{{project_vagrant_nodes}}"
   tags: provision

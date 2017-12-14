@@ -12,7 +12,7 @@
     - pipeline/{{ pipeline }}/db_vars.yml
     - group_vars/webservers
     - group_vars/dbservers
-  - include_tasks: tasks/load_vars.yml
+  # - include_tasks: tasks/load_vars.yml
 
   roles:
 
@@ -22,7 +22,7 @@
       djangopg_template_localsettingspy: "templates/all/djangopg/local_settings.py.j2"
 
     - role: 91de0n.memcached
-      memcached_listen_ip: "{{webip[0]}}"
+      memcached_listen_ip: "{{project_memcached_host}}"
       when: project_cache or project_task
 
     - role: 91de0n.gunicorn

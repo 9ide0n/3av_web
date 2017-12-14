@@ -1,6 +1,6 @@
-provider: vagrant
+project_provider: vagrant
 
-vagrant_nodes:
+project_vagrant_nodes:
   - name: db
     groups:
       - dbservers
@@ -11,6 +11,11 @@ vagrant_nodes:
       - webservers
       - taskservers
     ip: '192.168.200.10'
+  - name: deb
+    groups:
+      - webservers
+      - taskservers
+    ip: '192.168.200.11'    
   - name: task1
     groups:
       - taskservers
@@ -19,5 +24,13 @@ vagrant_nodes:
     groups:
       - taskservers
     ip: '192.168.200.32'
+
+project_dbhost: "{{project_vagrant_nodes[0].ip}}"
+project_queue_host: "{{project_vagrant_nodes[0].ip}}"
+project_memcached_host: "{{project_vagrant_nodes[1].ip}}"
+project_domains:
+- "{{inventory_hostname}}"
+- "{{inventory_hostname}}.dev.local"
+
 
 #
