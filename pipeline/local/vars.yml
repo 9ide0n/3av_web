@@ -5,6 +5,7 @@ project_vagrant_nodes:
     groups:
       - dbservers
       - queues
+      - loadbalancers
     ip: '192.168.200.20'
   - name: web
     groups:
@@ -15,7 +16,7 @@ project_vagrant_nodes:
     groups:
       - webservers
       - taskservers
-    ip: '192.168.200.11'    
+    ip: '192.168.200.11'
   - name: task1
     groups:
       - taskservers
@@ -29,6 +30,7 @@ project_dbhost: "{{project_vagrant_nodes[0].ip}}"
 project_queue_host: "{{project_vagrant_nodes[0].ip}}"
 project_memcached_host: "{{project_vagrant_nodes[1].ip}}"
 project_domains:
+- "{{project_name}}"
 - "{{inventory_hostname}}"
 - "{{inventory_hostname}}.dev.local"
 

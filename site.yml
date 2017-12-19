@@ -8,3 +8,5 @@
 - import_playbook: tasks.yml
 
 - import_playbook: webservers.yml
+
+- import_playbook: loadbalancers.yml

@@ -1,3 +1,4 @@
 project_nginx: false
 project_gunicorn: false
 project_cache: true
+project_lb: false

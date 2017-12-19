@@ -8,3 +8,4 @@ project_gunicorn_procname: "gunicorn_{{project_name}}"
 project_nginx: true
 project_ssl: true
 project_ssl_path: /etc/nginx/conf
+project_lb: true
