@@ -11,6 +11,7 @@ project_vagrant_nodes:
 
 project_dbhost: "{{project_vagrant_nodes[0].ip}}"
 project_queue_host: "{{project_vagrant_nodes[0].ip}}"
+project_memcached_host: "{{project_vagrant_nodes[0].ip}}"
 project_domains:
 - "{{project_name}}"
 - "{{inventory_hostname}}"
