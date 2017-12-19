@@ -1,1 +1,1 @@
-vagrant plugin install vagrant-hosts-provisioner
+vagrant plugin install vagrant-hosts
