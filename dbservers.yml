@@ -10,7 +10,8 @@
     - pipeline/{{ pipeline }}/db_vars.yml
     - group_vars/dbservers
   # - include_tasks: tasks/load_vars.yml
-
+    tags: always
+    
   roles:
     - role: 91de0n.postgrespro
       postgrespro_template_pghbaconf: "templates/{{pipeline}}/postgrespro/pg_hba.conf.j2"
