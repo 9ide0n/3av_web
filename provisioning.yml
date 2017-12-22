@@ -1,11 +1,16 @@
 - name: Perform the provisioning from localhost
   hosts: localhost
   gather_facts: False
-  vars_files:
+
+  pre_tasks:
+  - include_vars: "{{item}}"
+    with_items:
     - group_vars/all
     - pipeline/{{ pipeline }}/vars.yml
     # - pipeline/{{ pipeline }}/secrets.yml
     # - group_vars/dbservers
+    tags: always
+
   roles:
     - role: aws_provisioning
       when: project_provider == 'aws'

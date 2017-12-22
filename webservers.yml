@@ -1,6 +1,7 @@
 - hosts:
     - webservers
-
+  tags:
+    - webservers
   pre_tasks:
   - include_vars: "{{item}}"
     with_items:

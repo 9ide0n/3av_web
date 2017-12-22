@@ -1,6 +1,7 @@
 - hosts:
     - taskservers
-
+  tags:
+    - taskservers
   pre_tasks:
   - include_vars: "{{item}}"
     with_items:
@@ -13,6 +14,7 @@
     - group_vars/webservers
     - group_vars/dbservers
   # - include_tasks: tasks/load_vars.yml
+    tags: always
 
   roles:
     - role: 91de0n.virtualenv

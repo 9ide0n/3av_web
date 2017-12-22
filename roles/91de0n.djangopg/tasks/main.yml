@@ -39,3 +39,4 @@
     - makemigrations
     - migrate
     - collectstatic
+  tags: migrate

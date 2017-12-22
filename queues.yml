@@ -1,5 +1,7 @@
 - hosts:
     - queues
+  tags:
+    - queues
 
   pre_tasks:
   - include_vars: "{{item}}"
@@ -10,7 +12,7 @@
     - pipeline/{{ pipeline }}/taskqueue_vars.yml
   # - include_tasks: tasks/load_vars.yml
     tags: always
-    
+
   roles:
     - role: 91de0n.rabbitmq
       rabbitmq_vhost_var: "{{project_queue_vhost}}"
