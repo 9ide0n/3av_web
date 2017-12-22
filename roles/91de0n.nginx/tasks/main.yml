@@ -1,9 +1,157 @@
 ---
-  - name: install nginx
-    apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
-    become: True
+  - name: install  packages required to build from source
+    become: true
+    apt: name={{item}} state=present update_cache=yes
     with_items:
-      - nginx
+      - build-essential
+
+  - name: get nginx version
+    command: nginx -v
+    ignore_errors: true
+    changed_when: false
+    # failed_when: false
+    register: nginx_installed_version
+
+  # - debug: msg="it failed"
+  #   when: nginx_installed_version|failed
+  #
+  # - debug: msg="it succeeded"
+  #   when: nginx_installed_version|success
+
+  - name: force install if the version numbers do not match
+    set_fact:
+      nginx_reinstall_from_source: true
+    when: '(nginx_installed_version|success and (nginx_installed_version.stderr is defined and nginx_installed_version.stderr | regex_replace("^.*/(.*)$", "\\1") | version_compare(nginx_build, operator="!=")))'
+
+  - when: nginx_installed_version|failed or nginx_reinstall_from_source
+    block:
+
+    - name: delete nginx from repo
+      # when: nginx_installed_version|success
+      become: true
+      apt: name={{item}} state=absent purge=yes
+      with_items:
+        - nginx
+        - nginx-common
+        - nginx-core
+
+    - name: install nginx from repo
+      become: true
+      apt: name={{item}} state=present
+      with_items:
+        - nginx
+
+    - name: stop nginx
+      become: true
+      service: name=nginx state=stopped
+
+    - name: download source packages to build
+      get_url:
+        url: "{{item.href}}/{{item.file}}"
+        dest: "/tmp/{{item.file}}"
+      with_items:
+        "{{nginx_downloads}}"
+
+    - name: extract archives
+      unarchive:
+        src: "/tmp/{{item.file}}"
+        dest: /tmp/
+        copy: false
+      with_items:
+        "{{nginx_downloads}}"
+
+    - name: run ./configure
+      command: >
+       ./configure --prefix=/usr/share/nginx \
+            --sbin-path=/usr/sbin/nginx \
+            --modules-path=/usr/lib/nginx/modules \
+            --conf-path=/etc/nginx/nginx.conf \
+            --error-log-path=/var/log/nginx/error.log \
+            --http-log-path=/var/log/nginx/access.log \
+            --pid-path=/run/nginx.pid \
+            --lock-path=/var/lock/nginx.lock \
+            --user=www-data \
+            --group=www-data \
+            --build=9ide0n \
+            --http-client-body-temp-path=/var/lib/nginx/body \
+            --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+            --http-proxy-temp-path=/var/lib/nginx/proxy \
+            --http-scgi-temp-path=/var/lib/nginx/scgi \
+            --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
+            --with-openssl=../openssl-"{{nginx_openssl_version}}" \
+            --with-openssl-opt=enable-ec_nistp_64_gcc_128 \
+            --with-openssl-opt=no-nextprotoneg \
+            --with-openssl-opt=no-weak-ssl-ciphers \
+            --with-openssl-opt=no-ssl3 \
+            --with-pcre=../pcre-"{{nginx_pcre_version}}" \
+            --with-pcre-jit \
+            --with-zlib=../zlib-"{{nginx_zlib_version}}" \
+            --with-compat \
+            --with-file-aio \
+            --with-threads \
+            --with-http_addition_module \
+            --with-http_auth_request_module \
+            --with-http_dav_module \
+            --with-http_flv_module \
+            --with-http_gunzip_module \
+            --with-http_gzip_static_module \
+            --with-http_mp4_module \
+            --with-http_random_index_module \
+            --with-http_realip_module \
+            --with-http_slice_module \
+            --with-http_ssl_module \
+            --with-http_sub_module \
+            --with-http_stub_status_module \
+            --with-http_v2_module \
+            --with-http_secure_link_module \
+            --with-mail \
+            --with-mail_ssl_module \
+            --with-stream \
+            --with-stream_realip_module \
+            --with-stream_ssl_module \
+            --with-stream_ssl_preread_module \
+            --with-debug \
+            --with-cc-opt='-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2' \
+            --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,--as-needed' \
+            --add-module=../nginx-module-vts-"{{nginx_module_vts_version}}"
+
+      args:
+        chdir: "/tmp/nginx-{{nginx_version}}"
+        creates: "/tmp/nginx-{{nginx_version}}/objs/Makefile"
+
+    - name: build nginx
+      command: make -j "{{ansible_processor_cores}}"
+      args:
+        chdir: "/tmp/nginx-{{nginx_version}}"
+        creates: "/tmp/nginx-{{nginx_version}}/objs/nginx"
+
+    - name: install nginx
+      become: true
+      command: make install
+      args:
+        chdir: "/tmp/nginx-{{nginx_version}}"
+        # creates: /usr/sbin/nginx
+
+    - name: remove  directories
+      file:
+        path: "/tmp/{{item.file | replace('.tar.gz', '')}}"
+        state: absent
+      with_items:
+      - "{{nginx_downloads}}"
+      - {
+          file: "nginx-module-vts-{{nginx_module_vts_version}}"
+        }
+
+    - name: remove archives
+      file:
+        path: "/tmp/{{item.file}}"
+        state: absent
+      with_items:
+        "{{nginx_downloads}}"
+
+      #end block when: nginx_installed_version|failed or nginx_reinstall_from_source
+
+  # - fail:
 
   - name: ensure config path exists
     file: path={{ project_ssl_path }} state=directory

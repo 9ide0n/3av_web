@@ -1,3 +1,5 @@
+vhost_traffic_status_zone;
+
 upstream {{ project_name }} {
   {% for host in groups.webservers %}
     server {{ hostvars[host].inventory_hostname }};
@@ -23,4 +25,10 @@ server {
   location / {
     proxy_pass          http://{{ project_name }};
   }
+  
+  location /vhost_status {
+		vhost_traffic_status on;
+		vhost_traffic_status_display;
+		vhost_traffic_status_display_format html;
+	}
 }

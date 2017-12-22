@@ -1,3 +1,5 @@
+vhost_traffic_status_zone;
+
 upstream {{ project_name }} {
 # unix sockets can't be created at vboxfs
 #    server unix:{{ project_path }}/gunicorn.sock fail_timeout=0;
@@ -50,4 +52,10 @@ server {
         access_log      off;
         log_not_found   off;
     }
+    
+    location /vhost_status {
+  		vhost_traffic_status on;
+  		vhost_traffic_status_display;
+  		vhost_traffic_status_display_format html;
+  	}
 }
